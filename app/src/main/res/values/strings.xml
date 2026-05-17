@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Магазинчик</string>
+    <string name="product_image">Изображение товара</string>
+    <string name="title_catalog">Каталог товаров</string>
+</resources>

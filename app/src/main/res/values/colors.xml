@@ -1,0 +1,27 @@
+<resources>
+    <color name="black">#0B0B0B</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="background_main">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+
+    <color name="accent">#3E3E3E</color>
+    <color name="accent_dark">#FFFFFF</color>
+
+    <color name="accent_secondary">#FF9100</color>
+
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#5C5C5C</color>
+    <color name="text_on_accent">#FFFFFF</color>
+
+    <color name="bottom_nav_color">#81C784</color>
+    <color name="bottom_nav_selected_color">#FF1744</color>
+
+    <color name="chip_background">#FFFFFF</color>
+    <color name="chip_stroke">#AED581</color>
+    <color name="chip_selected_background">#81C784</color>
+    <color name="chip_selected_stroke">#609262</color>
+
+    <color name="price_background">#FFE082</color>
+
+</resources>
