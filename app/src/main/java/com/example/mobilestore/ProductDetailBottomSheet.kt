@@ -26,7 +26,12 @@ class ProductDetailBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        product = arguments?.getParcelable("PRODUCT")
+        product = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("PRODUCT", Product::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable("PRODUCT")
+        }
     }
 
     override fun onCreateView(
