@@ -1,5 +1,6 @@
 package com.example.mobilestore
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilestore.adapter.ProductAdapter
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Сначала инициализируем ViewModel
-        viewModel = MainViewModel(application)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         // Затем восстанавливаем состояние
         if (savedInstanceState != null) {
@@ -70,7 +72,8 @@ class MainActivity : AppCompatActivity() {
         binding.cartButton.setOnClickListener {
             setBottomActive(false)
             isCatalogSelected = false
-            Toast.makeText(this, "Корзина в разработке", Toast.LENGTH_SHORT).show()
+            // ОТКРЫВАЕМ КОРЗИНУ, А НЕ ПРОСТО TOAST
+            startActivity(Intent(this, CartActivity::class.java))
         }
 
         // Восстанавливаем состояние после поворота

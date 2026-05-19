@@ -24,10 +24,7 @@
             </intent-filter>
         </activity>
 
-        <!-- ДОБАВЬ ЭТО -->
-        <activity
-            android:name=".CartActivity"
-            android:exported="false" />
+        <activity android:name=".CartActivity" />
 
     </application>
 </manifest>
