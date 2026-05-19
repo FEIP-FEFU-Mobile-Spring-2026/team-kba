@@ -1,68 +1,67 @@
 package com.example.mobilestore.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.mobilestore.ProductDetailBottomSheet
 import com.example.mobilestore.R
+import com.example.mobilestore.databinding.ItemProductBinding
 import com.example.mobilestore.model.Product
 
 class ProductAdapter(
-    private val products: List<Product>,
-    private val context: android.content.Context
+    private var products: List<Product>
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
+    private var onItemClickListener: ((Product) -> Unit)? = null
+
+    fun updateProducts(newProducts: List<Product>) {
+        products = newProducts
+        notifyDataSetChanged()
+    }
+
+    fun setOnItemClickListener(listener: (Product) -> Unit) {
+        onItemClickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_product, parent, false)
-        return ProductViewHolder(view)
+        val binding = ItemProductBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ProductViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         holder.bind(product)
-
-        holder.itemView.setOnClickListener {
-            val bottomSheet = ProductDetailBottomSheet()
-
-            val args = android.os.Bundle()
-            args.putParcelable("PRODUCT", product)
-            bottomSheet.arguments = args
-
-            bottomSheet.show(
-                (context as androidx.appcompat.app.AppCompatActivity).supportFragmentManager,
-                "ProductDetailBottomSheet"
-            )
-        }
     }
 
-    override fun getItemCount() = products.size
+    override fun getItemCount(): Int = products.size
 
-    class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val productImage: ImageView = itemView.findViewById(R.id.productImage)
-        private val productTitle: TextView = itemView.findViewById(R.id.productTitle)
-        private val productDescription: TextView = itemView.findViewById(R.id.productDescription)
-        private val productPrice: TextView = itemView.findViewById(R.id.productPrice)
+    class ProductViewHolder(
+        private val binding: ItemProductBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: Product) {
-            productTitle.text = product.title
-            productDescription.text = product.description
+            binding.productTitle.text = product.name
+            binding.productDescription.text = product.shortDescription
 
-            val priceFormatted = String.format("%,d ₽", product.price.toLong()).replace(",", " ")
-            productPrice.text = priceFormatted
+            val priceInRubles = product.priceInKopecks / 100.0
+            val formattedPrice = String.format("%,d ₽", priceInRubles.toInt()).replace(",", " ")
+            binding.productPrice.text = formattedPrice
 
-            Glide.with(itemView.context)
-                .load(product.image.trim())
-                .apply(RequestOptions()
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .centerCrop())
-                .into(productImage)
+            Glide.with(binding.root.context)
+                .load(product.imageUrl)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.placeholder_image)
+                        .error(R.drawable.error_image)
+                        .centerCrop()
+                )
+                .into(binding.productImage)
         }
     }
 }

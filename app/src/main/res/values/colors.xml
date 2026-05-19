@@ -1,27 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#0B0B0B</color>
-    <color name="white">#FFFFFF</color>
+    <!-- Базовые цвета -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 
+    <!-- Основные цвета приложения (из jaga) -->
+    <color name="screen_bg">#F6F6F6</color>
+    <color name="product_bg">#FFFFFF</color>
     <color name="background_main">#FFFFFF</color>
     <color name="surface">#FFFFFF</color>
 
+    <!-- Акцентные цвета -->
     <color name="accent">#3E3E3E</color>
     <color name="accent_dark">#FFFFFF</color>
-
     <color name="accent_secondary">#FF9100</color>
+    <color name="accent_brown">#8B5E4E</color>
+    <color name="accent_brown_light">#A6775B</color>
 
+    <!-- Цвета текста -->
     <color name="text_primary">#1A1A1A</color>
     <color name="text_secondary">#5C5C5C</color>
     <color name="text_on_accent">#FFFFFF</color>
 
+    <!-- Нижнее меню -->
     <color name="bottom_nav_color">#81C784</color>
-    <color name="bottom_nav_selected_color">#FF1744</color>
+    <color name="bottom_nav_selected_color">#FF1744</color>or>
+    <color name="bottom_menu_active">#9B9B9B</color>
+    <color name="bottom_menu_inactive">#9E9E9E</color>
+    <color name="bottom_menu_bg">#FFFFFF</color>
 
+    <!-- Chip/категории -->
     <color name="chip_background">#FFFFFF</color>
     <color name="chip_stroke">#AED581</color>
     <color name="chip_selected_background">#81C784</color>
     <color name="chip_selected_stroke">#609262</color>
 
-    <color name="price_background">#FFE082</color>
+    <!-- Категории (новые) -->
+    <color name="category_selected_text">#FFFFFF</color>
+    <color name="category_unselected_text">#000000</color>
+    <color name="category_selected_bg">#6B4739</color>
+    <color name="category_unselected_bg">#EAEAEA</color>
+    <color name="category_stroke">#DDDDDD</color>
 
+    <!-- Цена -->
+    <color name="price_background">#FFE082</color>
+    <color name="price_bg">#EADDD7</color>
+    <color name="price_text">#1A1A1A</color>
+
+    <!-- Статус бар -->
+    <color name="status_bar_color">#FFFFFF</color>
+
+    <color name="menu_active_bg">#1A1A1A</color>
+    <color name="menu_inactive_bg">#F6F6F6</color>
+    <color name="menu_text_active">#FFFFFF</color>
+    <color name="menu_text_inactive">#1A1A1A</color>
+
+    <color name="bottom_nav_active">#1A1A1A</color>
+    <color name="bottom_nav_inactive">#C0C0C0</color>
 </resources>
