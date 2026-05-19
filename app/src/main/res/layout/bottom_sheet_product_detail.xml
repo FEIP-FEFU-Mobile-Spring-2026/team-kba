@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:paddingBottom="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/imageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/productDetailImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/product_image"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageContainer">
+
+        <TextView
+            android:id="@+id/productDetailTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            app:layout_constraintEnd_toStartOf="@id/infoIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Товар" />
+
+        <ImageView
+            android:id="@+id/infoIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/newLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/new_label_background"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="NEW"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageContainer" />
+
+    <TextView
+        android:id="@+id/productFullDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.2"
+        android:textColor="#666666"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleContainer"
+        tools:text="Полное описание товара." />
+
+    <TextView
+        android:id="@+id/sizeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="Выберите размер"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productFullDescription" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sizeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="#FFFFFF"
+        android:padding="4dp"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sizeTitle">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeXXS"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="XXS"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnSizeXS"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeXS"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="XS"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toEndOf="@id/btnSizeXXS"
+            app:layout_constraintEnd_toStartOf="@id/btnSizeS"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeS"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="S"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toEndOf="@id/btnSizeXS"
+            app:layout_constraintEnd_toStartOf="@id/btnSizeM"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeM"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="M"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toEndOf="@id/btnSizeS"
+            app:layout_constraintEnd_toStartOf="@id/btnSizeL"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeL"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="L"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toEndOf="@id/btnSizeM"
+            app:layout_constraintEnd_toStartOf="@id/btnSizeXL"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSizeXL"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="XL"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:cornerRadius="24dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#E0E0E0"
+            app:backgroundTint="#F0F0F0"
+            app:rippleColor="#E0E0E0"
+            app:layout_constraintStart_toEndOf="@id/btnSizeL"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:text="В корзину - 500 ₽"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="28dp"
+        app:backgroundTint="#81C784"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sizeContainer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
