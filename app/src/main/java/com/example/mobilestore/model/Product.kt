@@ -11,7 +11,12 @@ data class Product(
     val priceInKopecks: Int,
     val imageUrl: String,
     val tags: List<String>,
-    val categoryId: String
+    val categoryId: String,
+    val sizes: List<Size>,
+    val material: String,
+    val weight: String,
+    val season: String,
+    val countryOfOrigin: String
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -22,6 +27,11 @@ data class Product(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.createStringArrayList() ?: emptyList(),
+        parcel.readString() ?: "",
+        readSizesFromParcel(parcel),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readString() ?: ""
     )
 
@@ -34,17 +44,34 @@ data class Product(
         parcel.writeString(imageUrl)
         parcel.writeStringList(tags)
         parcel.writeString(categoryId)
+        writeSizesToParcel(parcel, sizes)
+        parcel.writeString(material)
+        parcel.writeString(weight)
+        parcel.writeString(season)
+        parcel.writeString(countryOfOrigin)
     }
 
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Product> {
-        override fun createFromParcel(parcel: Parcel): Product {
-            return Product(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Product?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel): Product = Product(parcel)
+        override fun newArray(size: Int): Array<Product?> = arrayOfNulls(size)
     }
+}
+
+private fun writeSizesToParcel(parcel: Parcel, sizes: List<Size>) {
+    parcel.writeInt(sizes.size)
+    sizes.forEach { size ->
+        parcel.writeString(size.id)
+        parcel.writeString(size.name)
+    }
+}
+
+private fun readSizesFromParcel(parcel: Parcel): List<Size> {
+    val size = mutableListOf<Size>()
+    val sizeCount = parcel.readInt()
+    repeat(sizeCount) {
+        size.add(Size(parcel.readString() ?: "", parcel.readString() ?: ""))
+    }
+    return size
 }

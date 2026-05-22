@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.mobilestore.ProductDetailBottomSheet
 import com.example.mobilestore.R
 import com.example.mobilestore.databinding.ItemProductBinding
 import com.example.mobilestore.model.Product
@@ -14,15 +15,11 @@ class ProductAdapter(
     private var products: List<Product>
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
-    private var onItemClickListener: ((Product) -> Unit)? = null
+    var onItemClick: ((Product) -> Unit)? = null
 
     fun updateProducts(newProducts: List<Product>) {
         products = newProducts
         notifyDataSetChanged()
-    }
-
-    fun setOnItemClickListener(listener: (Product) -> Unit) {
-        onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -37,6 +34,17 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         holder.bind(product)
+
+        holder.itemView.setOnClickListener {
+            val bottomSheet = ProductDetailBottomSheet()
+            val args = Bundle()
+            args.putParcelable("PRODUCT", product)
+            bottomSheet.arguments = args
+            bottomSheet.show(
+                (holder.itemView.context as androidx.appcompat.app.AppCompatActivity).supportFragmentManager,
+                "ProductDetailBottomSheet"
+            )
+        }
     }
 
     override fun getItemCount(): Int = products.size
