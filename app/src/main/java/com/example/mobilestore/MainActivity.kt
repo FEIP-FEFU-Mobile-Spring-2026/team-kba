@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         productAdapter = ProductAdapter(emptyList())
-        productAdapter.setOnItemClickListener { product ->
+        productAdapter.onItemClick = { product ->
             Toast.makeText(this, product.name, Toast.LENGTH_SHORT).show()
         }
 

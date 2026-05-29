@@ -1,8 +1,8 @@
 package com.example.mobilestore.data
 
 import android.content.Context
-import com.example.mobilestore.model.Category
 import com.example.mobilestore.model.Product
+import com.example.mobilestore.model.Size
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,7 +24,7 @@ class ProductsRepository(private val context: Context) {
         }
     }
 
-    private suspend fun loadProductsFromJson(): List<Product> {
+    private fun loadProductsFromJson(): List<Product> {
         val jsonString = readJsonFromAssets()
         val jsonObject = JSONObject(jsonString)
         val itemsArray = jsonObject.getJSONArray("items")
@@ -34,11 +34,25 @@ class ProductsRepository(private val context: Context) {
         for (i in 0 until itemsArray.length()) {
             val item = itemsArray.getJSONObject(i)
 
+            // Читаем теги
             val tags = mutableListOf<String>()
             val tagsArray = item.optJSONArray("tags")
             if (tagsArray != null) {
                 for (j in 0 until tagsArray.length()) {
                     tags.add(tagsArray.getString(j))
+                }
+            }
+
+            // Читаем размеры
+            val sizes = mutableListOf<Size>()
+            val sizesArray = item.optJSONArray("sizes")
+            if (sizesArray != null) {
+                for (j in 0 until sizesArray.length()) {
+                    val sizeObj = sizesArray.getJSONObject(j)
+                    sizes.add(Size(
+                        id = sizeObj.getString("id"),
+                        name = sizeObj.getString("name")
+                    ))
                 }
             }
 
@@ -51,7 +65,12 @@ class ProductsRepository(private val context: Context) {
                     priceInKopecks = item.getInt("priceInKopecks"),
                     imageUrl = item.getString("imageUrl"),
                     tags = tags,
-                    categoryId = item.getString("categoryId")
+                    categoryId = item.getString("categoryId"),
+                    sizes = sizes,
+                    material = item.optString("material", ""),
+                    weight = item.optString("weight", ""),
+                    season = item.optString("season", ""),
+                    countryOfOrigin = item.optString("countryOfOrigin", "")
                 )
             )
         }
