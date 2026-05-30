@@ -49,10 +49,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         _uiState.value = CatalogUiState.Error(result.message)
                     }
                     is LoadResult.NoNetworkButHasCache -> {
-                        val cacheExists = (result as? LoadResult.Cache) != null
-                        if (cacheExists) {
-                            _showNoNetworkSnackbar.emit(Unit)
-                        }
+                        _showNoNetworkSnackbar.emit(Unit)
                     }
                     is LoadResult.CacheWithError -> {
                         allProducts = result.products

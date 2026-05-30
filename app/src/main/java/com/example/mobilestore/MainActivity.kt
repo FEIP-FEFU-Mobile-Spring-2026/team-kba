@@ -194,6 +194,9 @@ class MainActivity : AppCompatActivity() {
         binding.productsRecyclerView.visibility = View.GONE
         binding.errorLayout.visibility = View.VISIBLE
 
+        val errorText = binding.errorLayout.findViewById<TextView>(R.id.errorMessage)
+        errorText.text = message
+
         binding.retryButton.setOnClickListener {
             viewModel.retryLoad()
         }
