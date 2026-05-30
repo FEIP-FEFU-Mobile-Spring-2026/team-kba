@@ -3,12 +3,14 @@ package com.example.mobilestore.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobilestore.data.LoadResult
 import com.example.mobilestore.data.ProductsRepository
-import com.example.mobilestore.data.Result
 import com.example.mobilestore.model.Category
 import com.example.mobilestore.model.Product
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -22,6 +24,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedCategoryId = MutableStateFlow<String>("new")
     val selectedCategoryId: StateFlow<String> = _selectedCategoryId.asStateFlow()
 
+    private val _showNoNetworkSnackbar = MutableSharedFlow<Unit>()
+    val showNoNetworkSnackbar = _showNoNetworkSnackbar.asSharedFlow()
+
     private var allProducts = listOf<Product>()
 
     init {
@@ -32,29 +37,39 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.loadProducts().collect { result ->
                 when (result) {
-                    is Result.Loading -> {
-                        _uiState.value = CatalogUiState.Loading
+                    is LoadResult.Cache -> {
+                        allProducts = result.products
+                        updateUiState()
                     }
-                    is Result.Success -> {
-                        allProducts = result.data
-
-                        val categories = extractCategories(result.data)
-                        val categoriesWithNews = listOf(
-                            Category("new", "Новинки")
-                        ) + categories
-
-                        _uiState.value = CatalogUiState.Success(
-                            products = filterProductsByCategory(_selectedCategoryId.value),
-                            categories = categoriesWithNews,
-                            selectedCategoryId = _selectedCategoryId.value
-                        )
+                    is LoadResult.Success -> {
+                        allProducts = result.products
+                        updateUiState()
                     }
-                    is Result.Error -> {
+                    is LoadResult.Error -> {
                         _uiState.value = CatalogUiState.Error(result.message)
+                    }
+                    is LoadResult.NoNetworkButHasCache -> {
+                        _showNoNetworkSnackbar.emit(Unit)
+                    }
+                    is LoadResult.CacheWithError -> {
+                        allProducts = result.products
+                        updateUiState()
+                        _showNoNetworkSnackbar.emit(Unit)
                     }
                 }
             }
         }
+    }
+
+    private fun updateUiState() {
+        val categories = extractCategories(allProducts)
+        val categoriesWithNews = listOf(Category("new", "Новинки")) + categories
+
+        _uiState.value = CatalogUiState.Success(
+            products = filterProductsByCategory(_selectedCategoryId.value),  // ← обратно
+            categories = categoriesWithNews,
+            selectedCategoryId = _selectedCategoryId.value
+        )
     }
 
     private fun extractCategories(products: List<Product>): List<Category> {
@@ -66,7 +81,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             "cat_shoes" to "Обувь",
             "cat_outerwear" to "Верхняя одежда"
         )
-
         return uniqueCategories.map { categoryId ->
             Category(categoryId, categoryNames[categoryId] ?: categoryId)
         }
@@ -74,13 +88,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun selectCategory(categoryId: String) {
         _selectedCategoryId.value = categoryId
-
         if (_uiState.value is CatalogUiState.Success) {
-            val currentState = _uiState.value as CatalogUiState.Success
-            _uiState.value = currentState.copy(
-                products = filterProductsByCategory(categoryId),
-                selectedCategoryId = categoryId
-            )
+            updateUiState()
         }
     }
 

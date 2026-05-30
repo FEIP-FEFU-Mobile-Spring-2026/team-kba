@@ -16,6 +16,7 @@ import com.example.mobilestore.databinding.ActivityMainBinding
 import com.example.mobilestore.model.Category
 import com.example.mobilestore.viewmodel.CatalogUiState
 import com.example.mobilestore.viewmodel.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -31,10 +32,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Сначала инициализируем ViewModel
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        // Затем восстанавливаем состояние
         if (savedInstanceState != null) {
             isCatalogSelected = savedInstanceState.getBoolean("is_catalog_selected", true)
             val selectedCategory = savedInstanceState.getString("selected_category")
@@ -44,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         setupBottomNavigation()
         observeViewModel()
+        observeNetworkSnackbar()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -66,29 +66,24 @@ class MainActivity : AppCompatActivity() {
         binding.menuButton.setOnClickListener {
             setBottomActive(true)
             isCatalogSelected = true
-            // Здесь переход на каталог (он уже открыт)
         }
 
         binding.cartButton.setOnClickListener {
             setBottomActive(false)
             isCatalogSelected = false
-            // ОТКРЫВАЕМ КОРЗИНУ, А НЕ ПРОСТО TOAST
             startActivity(Intent(this, CartActivity::class.java))
         }
 
-        // Восстанавливаем состояние после поворота
         setBottomActive(isCatalogSelected)
     }
 
     private fun setBottomActive(isCatalogActive: Boolean) {
         if (isCatalogActive) {
-            // Активный каталог
             binding.menuIcon.setColorFilter(getColor(R.color.bottom_nav_active))
             binding.menuText.setTextColor(getColor(R.color.bottom_nav_active))
             binding.cartIcon.setColorFilter(getColor(R.color.bottom_nav_inactive))
             binding.cartText.setTextColor(getColor(R.color.bottom_nav_inactive))
         } else {
-            // Активная корзина
             binding.menuIcon.setColorFilter(getColor(R.color.bottom_nav_inactive))
             binding.menuText.setTextColor(getColor(R.color.bottom_nav_inactive))
             binding.cartIcon.setColorFilter(getColor(R.color.bottom_nav_active))
@@ -104,6 +99,17 @@ class MainActivity : AppCompatActivity() {
                     is CatalogUiState.Success -> showProducts(state)
                     is CatalogUiState.Error -> showError(state.message)
                 }
+            }
+        }
+    }
+
+    private fun observeNetworkSnackbar() {
+        lifecycleScope.launch {
+            viewModel.showNoNetworkSnackbar.collect {
+                Snackbar.make(binding.root, "Нет подключения к интернету", Snackbar.LENGTH_LONG)
+                    .setAction("Повторить") {
+                        viewModel.retryLoad()
+                    }.show()
             }
         }
     }
@@ -131,16 +137,14 @@ class MainActivity : AppCompatActivity() {
             binding.categoriesContainer.addView(categoryView)
 
             if (category.id == selectedId) {
-                selectCategoryView(categoryView, true)  // Сразу делаем активной
+                selectCategoryView(categoryView, true)
             }
 
             categoryView.setOnClickListener {
-                // Сброс всех
                 for (i in 0 until binding.categoriesContainer.childCount) {
                     val child = binding.categoriesContainer.getChildAt(i)
                     selectCategoryView(child, false)
                 }
-                // Активация нажатой
                 selectCategoryView(categoryView, true)
                 selectCategory(category.id)
             }
@@ -157,12 +161,11 @@ class MainActivity : AppCompatActivity() {
 
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            100  // Высота 48dp (можно увеличить до 52, если нужно выше)
+            100
         )
         params.marginEnd = 18
         textView.layoutParams = params
 
-        // Неактивный стиль по умолчанию (серый фон)
         textView.setBackgroundResource(R.drawable.bg_category_unselected)
         textView.setTextColor(getColor(R.color.black))
 
@@ -170,7 +173,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectCategoryView(view: View, isSelected: Boolean) {
-        if (!::binding.isInitialized) return  // Проверка, что binding инициализирован
+        if (!::binding.isInitialized) return
 
         val textView = view as TextView
         if (isSelected) {
@@ -190,6 +193,9 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.GONE
         binding.productsRecyclerView.visibility = View.GONE
         binding.errorLayout.visibility = View.VISIBLE
+
+        val errorText = binding.errorLayout.findViewById<TextView>(R.id.errorMessage)
+        errorText.text = message
 
         binding.retryButton.setOnClickListener {
             viewModel.retryLoad()
