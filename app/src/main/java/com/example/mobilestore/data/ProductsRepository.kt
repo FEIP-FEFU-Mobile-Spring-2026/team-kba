@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.mobilestore.model.Product
 import com.example.mobilestore.model.ProductEntity
 import com.example.mobilestore.model.Size
-import com.example.mobilestore.network.ApiResponse
 import com.example.mobilestore.network.ApiService
 import com.example.mobilestore.network.NetworkHelper
 import com.google.gson.Gson
@@ -105,6 +104,16 @@ class ProductsRepository(private val context: Context) {
                 }
             }
         }
+    }
+
+    // Метод для получения товара по ID (для корзины)
+    suspend fun getProductById(productId: String): Product? {
+        return productDao.getAllProducts().first().find { it.id == productId }?.toProduct()
+    }
+
+    // Метод для получения всех товаров (для корзины)
+    suspend fun getAllProductsList(): List<Product> {
+        return productDao.getAllProducts().first().map { it.toProduct() }
     }
 
     private fun ProductEntity.toProduct(): Product {

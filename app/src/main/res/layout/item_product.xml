@@ -17,7 +17,6 @@
         android:scaleType="centerCrop"
         tools:src="@tools:sample/backgrounds/scenic" />
 
-    <!-- Правая часть: текст сверху, цена внизу -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="136dp"
@@ -26,7 +25,6 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <!-- Верхняя часть с текстом (занимает всё свободное место) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -55,13 +53,12 @@
 
         </LinearLayout>
 
-        <!-- Цена внизу -->
+        <!-- Кнопка с ценой (видна, если товара нет в корзине) -->
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="0dp"
             android:background="#FFF2EC"
             android:paddingStart="18dp"
             android:paddingTop="6dp"
@@ -69,9 +66,44 @@
             android:paddingBottom="6dp"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/accent_brown"
+            android:textColor="#EE5507"
             android:gravity="center"
             tools:text="4 799 ₽" />
+
+        <!-- Счетчик количества (виден, если товар в корзине) -->
+        <LinearLayout
+            android:id="@+id/counterLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/btnMinus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="#F6F6F6"
+                android:src="@drawable/ic_minus"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/counterText"
+                android:layout_width="40dp"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnPlus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="#F6F6F6"
+                android:src="@drawable/ic_plus"
+                android:padding="8dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
