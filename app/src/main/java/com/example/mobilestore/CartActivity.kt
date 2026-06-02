@@ -45,6 +45,9 @@ class CartActivity : AppCompatActivity() {
                 if (cartItem.quantity > 1) {
                     viewModel.updateQuantity(cartItem, cartItem.quantity - 1)
                 }
+            },
+            onDeleteClick = { cartItem ->
+                viewModel.removeItem(cartItem)
             }
         )
         binding.cartRecyclerView.layoutManager = LinearLayoutManager(this)

@@ -10,7 +10,8 @@ import com.example.mobilestore.databinding.ItemCartBinding
 
 class CartAdapter(
     private val onPlusClick: (CartItem) -> Unit,
-    private val onMinusClick: (CartItem) -> Unit
+    private val onMinusClick: (CartItem) -> Unit,
+    private val onDeleteClick: (CartItem) -> Unit  // ← Добавлено
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private var items = listOf<CartItem>()
@@ -46,6 +47,7 @@ class CartAdapter(
 
             binding.btnPlus.setOnClickListener { onPlusClick(item) }
             binding.btnMinus.setOnClickListener { onMinusClick(item) }
+            binding.btnDelete.setOnClickListener { onDeleteClick(item) }
         }
     }
 }
