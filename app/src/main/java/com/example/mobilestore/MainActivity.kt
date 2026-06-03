@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilestore.adapter.ProductAdapter
 import com.example.mobilestore.databinding.ActivityMainBinding
+import com.example.mobilestore.data.CartRepository
 import com.example.mobilestore.model.Category
 import com.example.mobilestore.viewmodel.CatalogUiState
 import com.example.mobilestore.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var productAdapter: ProductAdapter
     private var isCatalogSelected = true
+
+    private val cartRepository by lazy { CartRepository(application) }
+    private var cartItemsMap = mutableMapOf<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +46,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupRecyclerView()
+        observeCartForCounters()
         setupBottomNavigation()
         observeViewModel()
         observeNetworkSnackbar()
+        observeCartCount()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -53,13 +60,68 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        productAdapter = ProductAdapter(emptyList())
+        productAdapter = ProductAdapter(emptyList()).apply {
+            onQuantityChange = { product, delta ->
+                lifecycleScope.launch {
+                    val currentQuantity = cartItemsMap[product.id] ?: 0
+                    val newQuantity = currentQuantity + delta
+
+                    if (newQuantity <= 0) {
+                        val cartItems = cartRepository.getCartItems().first()
+                        val cartItem = cartItems.find { it.product.id == product.id }
+                        cartItem?.let { cartRepository.removeItem(it) }
+                    } else if (currentQuantity == 0) {
+                        val size = product.sizes.firstOrNull()
+                        if (size != null) {
+                            cartRepository.addItem(product, size)
+                            Toast.makeText(this@MainActivity, "Товар добавлен в корзину", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@MainActivity, "Для этого товара нет доступных размеров", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        val cartItems = cartRepository.getCartItems().first()
+                        val cartItem = cartItems.find { it.product.id == product.id }
+                        cartItem?.let { cartRepository.updateQuantity(it, newQuantity) }
+                    }
+                }
+            }
+        }
+
+        productAdapter.getQuantity = { productId -> cartItemsMap[productId] ?: 0 }
         productAdapter.onItemClick = { product ->
             Toast.makeText(this, product.name, Toast.LENGTH_SHORT).show()
         }
 
         binding.productsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.productsRecyclerView.adapter = productAdapter
+    }
+
+    private fun observeCartForCounters() {
+        lifecycleScope.launch {
+            cartRepository.getCartItems().collect { cartItems ->
+                cartItemsMap.clear()
+                cartItems.forEach { cartItem ->
+                    cartItemsMap[cartItem.product.id] = cartItem.quantity
+                }
+                productAdapter.getQuantity = { productId -> cartItemsMap[productId] ?: 0 }
+                productAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun observeCartCount() {
+        lifecycleScope.launch {
+            cartRepository.getCartCount().collect { count ->
+                binding.cartCountText.apply {
+                    if (count > 0) {
+                        text = count.toString()
+                        visibility = View.VISIBLE
+                    } else {
+                        visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     private fun setupBottomNavigation() {
@@ -107,9 +169,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.showNoNetworkSnackbar.collect {
                 Snackbar.make(binding.root, "Нет подключения к интернету", Snackbar.LENGTH_LONG)
-                    .setAction("Повторить") {
-                        viewModel.retryLoad()
-                    }.show()
+                    .setAction("Повторить") { viewModel.retryLoad() }
+                    .show()
             }
         }
     }
@@ -193,12 +254,7 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.GONE
         binding.productsRecyclerView.visibility = View.GONE
         binding.errorLayout.visibility = View.VISIBLE
-
-        val errorText = binding.errorLayout.findViewById<TextView>(R.id.errorMessage)
-        errorText.text = message
-
-        binding.retryButton.setOnClickListener {
-            viewModel.retryLoad()
-        }
+        binding.errorMessage.text = message
+        binding.retryButton.setOnClickListener { viewModel.retryLoad() }
     }
 }

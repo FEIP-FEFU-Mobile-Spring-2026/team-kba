@@ -12,12 +12,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginRight
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.mobilestore.data.CartRepository
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.example.mobilestore.model.Product
 import com.example.mobilestore.model.Size
+import kotlinx.coroutines.launch
 
 class ProductDetailBottomSheet : BottomSheetDialogFragment() {
 
@@ -82,12 +85,15 @@ class ProductDetailBottomSheet : BottomSheetDialogFragment() {
                 Toast.makeText(requireContext(), "Выберите размер", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            Toast.makeText(
-                requireContext(),
-                "Товар добавлен в корзину:\n${product?.name}\nРазмер: ${selectedSize?.name}",
-                Toast.LENGTH_LONG
-            ).show()
-            dismiss()
+
+            product?.let { product ->
+                lifecycleScope.launch {
+                    val cartRepository = CartRepository(requireContext())
+                    cartRepository.addItem(product, selectedSize!!)
+                    Toast.makeText(requireContext(), "Товар добавлен в корзину", Toast.LENGTH_SHORT).show()
+                    dismiss()
+                }
+            }
         }
     }
 
