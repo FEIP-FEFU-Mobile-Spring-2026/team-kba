@@ -10,7 +10,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.mockkObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -33,7 +33,7 @@ class CartRepositoryTest {
         mockProductDao = mockk()
         mockDatabase = mockk()
 
-        mockkStatic(AppDatabase::class)
+        mockkObject(AppDatabase.Companion)
         every { AppDatabase.getInstance(mockContext) } returns mockDatabase
         every { mockDatabase.cartDao() } returns mockCartDao
         every { mockDatabase.productDao() } returns mockProductDao

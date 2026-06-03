@@ -26,9 +26,8 @@ class CartRepository(private val context: Context) {
                     CartItem(
                         id = cartItem.id,
                         product = product,
-                        size = product.sizes.find {
-                            it.id == cartItem.sizeId
-                        } ?: return@mapNotNull null,
+                        size = product.sizes.find { it.id == cartItem.sizeId }
+                            ?: return@mapNotNull null,
                         quantity = cartItem.quantity
                     )
                 } else {
@@ -47,7 +46,13 @@ class CartRepository(private val context: Context) {
         if (existing != null) {
             cartDao.update(existing.copy(quantity = existing.quantity + 1))
         } else {
-            cartDao.insert(CartItemEntity(productId = product.id, sizeId = size.id, quantity = 1))
+            cartDao.insert(
+                CartItemEntity(
+                    productId = product.id,
+                    sizeId = size.id,
+                    quantity = 1
+                )
+            )
         }
     }
 
@@ -94,6 +99,10 @@ data class CartItem(
 // Функция расширения для преобразования ProductEntity в Product
 fun com.example.mobilestore.model.ProductEntity.toProduct(): Product {
     val gson = com.google.gson.Gson()
+    val sizeType = object : com.google
+    .gson.reflect.TypeToken<List<com.example.mobilestore.model
+            .Size>>() {}
+        .type
     return Product(
         id = id,
         name = name,
@@ -103,9 +112,7 @@ fun com.example.mobilestore.model.ProductEntity.toProduct(): Product {
         imageUrl = imageUrl,
         tags = gson.fromJson(tags, Array<String>::class.java).toList(),
         categoryId = categoryId,
-        sizes = gson.fromJson(sizes,
-            Array<com.example.mobilestore.model.Size>::class.java)
-            .toList(),
+        sizes = gson.fromJson(sizes, sizeType),
         material = material,
         weight = weight,
         season = season,
