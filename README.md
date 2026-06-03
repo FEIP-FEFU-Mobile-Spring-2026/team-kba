@@ -59,6 +59,42 @@
 - Настроен ktlint (линтер)
 - Unit-тесты (8 тестов: корзина и фильтры)
 
+## Инструкция по сборке
+
+**Требования:**
+- Android Studio (последняя стабильная версия)
+- JDK 11 или новее
+- Android SDK (minSdk = 24, targetSdk = 34)
+
+**Шаги для сборки:**
+
+1. **Клонирование репозитория**
+```bash
+git clone https://github.com/FEIP-FEFU-Mobile-Spring-2026/team-kba.git
+cd team-kba
+```
+
+text
+
+2. **Открытие в Android Studio**
+- File → Open → выберите папку `team-kba`
+- Дождитесь синхронизации Gradle
+
+3. **Сборка проекта**
+- Через IDE: Build → Make Project (Ctrl+F9)
+- Через терминал: `./gradlew assembleDebug`
+
+4. **Запуск приложения**
+- Подключите устройство или запустите эмулятор
+- Нажмите Run (зелёная стрелка) или Shift + F10
+
+5. **Запуск линтера и тестов**
+```bash
+./gradlew ktlintCheck # проверка стиля кода
+./gradlew ktlintFormat # автоисправление стиля
+./gradlew test # запуск всех тестов
+```
+
 ## Статус
 
 ✅ Проект полностью завершён, все 6 блоков сданы.
