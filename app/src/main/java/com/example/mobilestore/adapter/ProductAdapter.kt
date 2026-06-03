@@ -17,8 +17,8 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     var onItemClick: ((Product) -> Unit)? = null
-    var onQuantityChange: ((Product, Int) -> Unit)? = null  // Добавлено
-    var getQuantity: ((String) -> Int)? = null  // Добавлено - получает количество товара по ID
+    var onQuantityChange: ((Product, Int) -> Unit)? = null
+    var getQuantity: ((String) -> Int)? = null
 
     fun updateProducts(newProducts: List<Product>) {
         products = newProducts
@@ -44,7 +44,8 @@ class ProductAdapter(
             args.putParcelable("PRODUCT", product)
             bottomSheet.arguments = args
             bottomSheet.show(
-                (holder.itemView.context as androidx.appcompat.app.AppCompatActivity).supportFragmentManager,
+                (holder.itemView.context as androidx.appcompat.app.AppCompatActivity)
+                    .supportFragmentManager,
                 "ProductDetailBottomSheet"
             )
         }
@@ -61,7 +62,8 @@ class ProductAdapter(
             binding.productDescription.text = product.shortDescription
 
             val priceInRubles = product.priceInKopecks / 100.0
-            val formattedPrice = String.format("%,d ₽", priceInRubles.toInt()).replace(",", " ")
+            val formattedPrice = String.format("%,d ₽", priceInRubles.toInt())
+                .replace(",", " ")
             binding.productPrice.text = formattedPrice
 
             Glide.with(binding.root.context)
@@ -74,7 +76,6 @@ class ProductAdapter(
                 )
                 .into(binding.productImage)
 
-            // Показываем либо цену, либо счетчик
             if (quantity > 0) {
                 binding.productPrice.visibility = View.GONE
                 binding.counterLayout.visibility = View.VISIBLE
@@ -84,7 +85,6 @@ class ProductAdapter(
                 binding.counterLayout.visibility = View.GONE
             }
 
-            // Обработчики для счетчика
             binding.btnPlus.setOnClickListener {
                 onQuantityChange?.invoke(product, 1)
             }
@@ -92,7 +92,7 @@ class ProductAdapter(
                 if (quantity > 1) {
                     onQuantityChange?.invoke(product, -1)
                 } else {
-                    onQuantityChange?.invoke(product, -1) // Удалит товар из корзины
+                    onQuantityChange?.invoke(product, -1)
                 }
             }
         }

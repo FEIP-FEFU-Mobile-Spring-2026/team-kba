@@ -26,10 +26,14 @@ class CartRepository(private val context: Context) {
                     CartItem(
                         id = cartItem.id,
                         product = product,
-                        size = product.sizes.find { it.id == cartItem.sizeId } ?: return@mapNotNull null,
+                        size = product.sizes.find {
+                            it.id == cartItem.sizeId
+                        } ?: return@mapNotNull null,
                         quantity = cartItem.quantity
                     )
-                } else null
+                } else {
+                    null
+                }
             }
         }
     }
@@ -48,14 +52,28 @@ class CartRepository(private val context: Context) {
     }
 
     suspend fun removeItem(cartItem: CartItem) {
-        cartDao.delete(CartItemEntity(id = cartItem.id, productId = cartItem.product.id, sizeId = cartItem.size.id, quantity = cartItem.quantity))
+        cartDao.delete(
+            CartItemEntity(
+                id = cartItem.id,
+                productId = cartItem.product.id,
+                sizeId = cartItem.size.id,
+                quantity = cartItem.quantity
+            )
+        )
     }
 
     suspend fun updateQuantity(cartItem: CartItem, newQuantity: Int) {
         if (newQuantity <= 0) {
             removeItem(cartItem)
         } else {
-            cartDao.update(CartItemEntity(id = cartItem.id, productId = cartItem.product.id, sizeId = cartItem.size.id, quantity = newQuantity))
+            cartDao.update(
+                CartItemEntity(
+                    id = cartItem.id,
+                    productId = cartItem.product.id,
+                    sizeId = cartItem.size.id,
+                    quantity = newQuantity
+                )
+            )
         }
     }
 
@@ -85,7 +103,9 @@ fun com.example.mobilestore.model.ProductEntity.toProduct(): Product {
         imageUrl = imageUrl,
         tags = gson.fromJson(tags, Array<String>::class.java).toList(),
         categoryId = categoryId,
-        sizes = gson.fromJson(sizes, Array<com.example.mobilestore.model.Size>::class.java).toList(),
+        sizes = gson.fromJson(sizes,
+            Array<com.example.mobilestore.model.Size>::class.java)
+            .toList(),
         material = material,
         weight = weight,
         season = season,

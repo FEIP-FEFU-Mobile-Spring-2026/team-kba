@@ -7,5 +7,5 @@ interface ApiService {
     @GET("catalog")
     suspend fun getCatalog(
         @Header("Authorization") token: String
-    ): ApiResponse  // ← изменили тип
+    ): ApiResponse // ← изменили тип
 }

@@ -11,7 +11,7 @@ import com.example.mobilestore.databinding.ItemCartBinding
 class CartAdapter(
     private val onPlusClick: (CartItem) -> Unit,
     private val onMinusClick: (CartItem) -> Unit,
-    private val onDeleteClick: (CartItem) -> Unit  // ← Добавлено
+    private val onDeleteClick: (CartItem) -> Unit // ← Добавлено
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private var items = listOf<CartItem>()
@@ -32,7 +32,9 @@ class CartAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    inner class CartViewHolder(private val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CartViewHolder(private val binding: ItemCartBinding) : RecyclerView.ViewHolder(
+        binding.root
+    ) {
         fun bind(item: CartItem) {
             binding.cartTitle.text = item.product.name
             binding.cartSize.text = "Размер: ${item.size.name}"
