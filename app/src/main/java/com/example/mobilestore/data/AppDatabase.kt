@@ -7,7 +7,11 @@ import androidx.room.RoomDatabase
 import com.example.mobilestore.model.CartItemEntity
 import com.example.mobilestore.model.ProductEntity
 
-@Database(entities = [ProductEntity::class, CartItemEntity::class], version = 2, exportSchema = false)
+@Database(
+    entities = [ProductEntity::class, CartItemEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun cartDao(): CartDao

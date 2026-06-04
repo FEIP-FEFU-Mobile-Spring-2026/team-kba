@@ -66,7 +66,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val categoriesWithNews = listOf(Category("new", "Новинки")) + categories
 
         _uiState.value = CatalogUiState.Success(
-            products = filterProductsByCategory(_selectedCategoryId.value),  // ← обратно
+            products = filterProductsByCategory(_selectedCategoryId.value), // ← обратно
             categories = categoriesWithNews,
             selectedCategoryId = _selectedCategoryId.value
         )

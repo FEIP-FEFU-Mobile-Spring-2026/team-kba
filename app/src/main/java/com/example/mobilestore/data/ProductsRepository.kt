@@ -100,18 +100,23 @@ class ProductsRepository(private val context: Context) {
                 if (cached.isEmpty()) {
                     emit(LoadResult.Error(result.message))
                 } else {
-                    emit(LoadResult.CacheWithError(cached.map { it.toProduct() }, result.message))
+                    emit(
+                        LoadResult.CacheWithError(
+                            products = cached.map { it.toProduct() },
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
     }
 
-    // Метод для получения товара по ID (для корзины)
     suspend fun getProductById(productId: String): Product? {
-        return productDao.getAllProducts().first().find { it.id == productId }?.toProduct()
+        return productDao.getAllProducts().first()
+            .find { it.id == productId }
+            ?.toProduct()
     }
 
-    // Метод для получения всех товаров (для корзины)
     suspend fun getAllProductsList(): List<Product> {
         return productDao.getAllProducts().first().map { it.toProduct() }
     }
@@ -146,5 +151,8 @@ sealed class LoadResult {
     data class Success(val products: List<Product>) : LoadResult()
     data class Error(val message: String) : LoadResult()
     object NoNetworkButHasCache : LoadResult()
-    data class CacheWithError(val products: List<Product>, val message: String) : LoadResult()
+    data class CacheWithError(
+        val products: List<Product>,
+        val message: String
+    ) : LoadResult()
 }

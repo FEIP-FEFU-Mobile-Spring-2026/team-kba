@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobilestore.adapter.ProductAdapter
-import com.example.mobilestore.databinding.ActivityMainBinding
 import com.example.mobilestore.data.CartRepository
+import com.example.mobilestore.databinding.ActivityMainBinding
 import com.example.mobilestore.model.Category
 import com.example.mobilestore.viewmodel.CatalogUiState
 import com.example.mobilestore.viewmodel.MainViewModel
@@ -74,9 +74,17 @@ class MainActivity : AppCompatActivity() {
                         val size = product.sizes.firstOrNull()
                         if (size != null) {
                             cartRepository.addItem(product, size)
-                            Toast.makeText(this@MainActivity, "Товар добавлен в корзину", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Товар добавлен в корзину",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Toast.makeText(this@MainActivity, "Для этого товара нет доступных размеров", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Для этого товара нет доступных размеров",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } else {
                         val cartItems = cartRepository.getCartItems().first()
